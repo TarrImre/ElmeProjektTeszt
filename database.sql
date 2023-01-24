@@ -1,0 +1,8 @@
+CREATE TABLE currencies(
+   	bank VARCHAR(50) NOT NULL,
+   	datum DATETIME,
+    	penznem VARCHAR(255) NOT NULL,
+	vetel VARCHAR(255) NOT NULL,
+	eladas VARCHAR(255) NOT NULL,
+	megnyitva DATETIME DEFAULT CURRENT_TIMESTAMP
+);
