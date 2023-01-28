@@ -16,6 +16,6 @@ A főoldal felületén a 2 block felett jelenítsük meg az utolsó 3 nap EUR é
 A felület legyen reszponzív, használja a bootstrap 5-ös verzióját.
 Az adatbázis felépítéséhez használja a codeigniter 4 beépített migrációs funkcióit.
 A formot is (js) és az üzleti logikát is validálja.
-Az alkalmazást CodeIgniter 4 alatt valósítsa meg, HMVC használatával. A modul neve legyen: Valuta
+Az alkalmazást CodeIgniter 4 alatt valósítsa meg, HMVC használatával. A modul neve legyen: Valuta.
 Plusz pontért a hibaüzeneteket jelenítse meg sweetalert2 js plugin használatával.
 
