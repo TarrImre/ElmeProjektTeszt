@@ -2,7 +2,7 @@
 
 [Demo](https://toxy.hu/elme/public/)
 
-Feladat:
+#### Feladat:
 Készítsen egy valutá váltó alkalmazást, ami a napiarfolyam.hu oldalon elérhető free API-n keresztül éri el az aktuális árfolyamokat.
 
 A főoldali felületen jelenlen meg egymás mellett 2 block. Mindkét block tartalmazzon egy beviteli mezőt, ahol megadhatjuk az átváltani kívánt összeget. Alattuk jelenjen meg egy legördülő menü ahonnan ki lehessen választani az adott blokk beviteli mezőjének pénznemét. A legördülők alatt legyen egy - egy gomb.
