@@ -67,12 +67,12 @@ class Calculate extends BaseController
 
 
         $data = [
-            'penznem' => $this->apiReadCurrency(),
+            'apiRead' => $this->apiReadCurrency(),
             'vegeredmeny1' => $result1,
             'vegeredmeny2' => $result2,
             'hiba' => $hiba,
-            'vetel_eladas_EUR' => $this->db_Read_EUR(),
-            'vetel_eladas_USD' => $this->db_Read_USD(),
+            'vetel_eladas_EUR' => $this->db_Read_EUR_USD("EUR"),
+            'vetel_eladas_USD' => $this->db_Read_EUR_USD("USD"),
         ];
 
         echo view('header');
@@ -80,8 +80,7 @@ class Calculate extends BaseController
         echo view('footer');
     }
 
-
-    public function db_Read_EUR()
+    public function db_Read_EUR_USD($currency)
     {
         $db_penznem = "";
         $db = db_connect();
@@ -89,20 +88,7 @@ class Calculate extends BaseController
         $results = $query->getResultArray();
         foreach ($results as $row) {
             $db_penznem = $row['penznem'];
-            if ($db_penznem == "EUR") {
-                return "<br>" . $db_penznem . " " . 'Vétel: ' . number_format($row['vetel'], 2) . " " . 'Eladás: ' . number_format($row['eladas'], 2);
-            }
-        }
-    }
-    public function db_Read_USD()
-    {
-        $db_penznem = "";
-        $db = db_connect();
-        $query   = $db->query('SELECT penznem,vetel,eladas FROM currencies');
-        $results = $query->getResultArray();
-        foreach ($results as $row) {
-            $db_penznem = $row['penznem'];
-            if ($db_penznem == "USD") {
+            if ($db_penznem == $currency) {
                 return $db_penznem . " " . 'Vétel: ' . number_format($row['vetel'], 2) . " " . 'Eladás: ' . number_format($row['eladas'], 2);
             }
         }
@@ -173,27 +159,12 @@ class Calculate extends BaseController
         return $popup;
     }
 
+
+    //A K&H árfolyamait használtam
     public function apiReadCurrency()
     {
         $xml = simplexml_load_file("http://api.napiarfolyam.hu/?bank=kh") or die("Hiba");
         foreach ($xml->valuta->item as $item) {
-            $penznem = array(
-                'EUR' => $item->EUR,
-                'USD' => $item->USD,
-                'GBP' => $item->GBP,
-                'CHF' => $item->CHF,
-                'JPY' => $item->JPY,
-                'AUD' => $item->AUD,
-                'CAD' => $item->CAD,
-                'SEK' => $item->SEK,
-                'NOK' => $item->NOK,
-                'DKK' => $item->DKK,
-                'CZK' => $item->CZK,
-                'PLN' => $item->PLN,
-            );
-
-            $db_datum = "";
-
             $db = db_connect();
             $query   = $db->query('SELECT * FROM currencies');
             $results = $query->getResultArray();
@@ -201,18 +172,16 @@ class Calculate extends BaseController
                 $db_datum = $row['datum'];
             }
             //Akkor "frissít", ha nem egyezik meg az adatbázisban lévő dátum és az api-ban lévő dátum
-            if ($db_datum == $item->datum) {
-                //echo 'ugyanaz';
-            } else {
-                //echo 'nem ugyanaz';
+            if ($db_datum != $item->datum) {
                 $this->deleteTable();
                 foreach ($xml->valuta->item as $item) {
                     $this->joinTable($item->bank, $item->datum, $item->penznem, $item->vetel, $item->eladas);
                 }
             }
-            return $penznem;
         }
     }
+
+
 
     public function joinTable($bank, $datum, $penznem, $vetel, $eladas)
     {
